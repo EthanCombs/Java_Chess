@@ -271,6 +271,7 @@ class Main {
     } 
     // Rook
     else if (answer.substring(0, 1).equals("R")){
+      move += "R";
       if (answer.substring(1,2).equals("X")){temp++;}
       int y = tryParse(answer.substring(temp, temp + 1)) - 1;
       int x = letterToNum(answer.substring(temp - 1, temp));
@@ -320,6 +321,7 @@ class Main {
     } 
     // Bishop
     else if (answer.substring(0, 1).equals("B") && (answer.substring(1, 2).equals("X") || tryLetterToNum(answer.substring(1, 2)) != -1)){
+      move += "B";
       if (answer.substring(1,2).equals("X")){temp++;}
       int y = tryParse(answer.substring(temp, temp + 1)) - 1;
       int x = letterToNum(answer.substring(temp - 1, temp));
@@ -344,7 +346,17 @@ class Main {
           tempSquare = Game.board.getSquare("Black Bishop",x,y);
         }
       }
-        // Sets move to the correct notation of the move (move sometimes works with wrong notation in answer)
+      // Gets Square to move to
+      if (answer.substring(3,4).equals("X")){temp++;}
+      y = tryParse(answer.substring(temp, temp + 1)) - 1;
+      x = letterToNum(answer.substring(temp - 1, temp));
+      // Sets start and end (only if it is in bounds) to the squares the program above got
+      if (y < 8 && y >= 0 && x < 8 && x >=0) {endX = x; endY = y;}
+      if (tempSquare != null){
+        startX = tempSquare.getX();
+        startY = tempSquare.getY();
+      }
+      // Sets move to the correct notation of the move (move sometimes works with wrong notation in answer)
       if (Game.players[i].isWhiteSide()){
         if (Game.board.getSquare(endX,endY).getPiece() != null && !Game.board.getSquare(endX,endY).getPiece().isWhite()){
           move += "x";
@@ -356,19 +368,10 @@ class Main {
         }
       }
       move += numToLetter(endX).toLowerCase() + (endY + 1);
-      // Gets Square to move to
-      if (answer.substring(3,4).equals("X")){temp++;}
-      y = tryParse(answer.substring(temp, temp + 1)) - 1;
-      x = letterToNum(answer.substring(temp - 1, temp));
-      // Sets start and end (only if it is in bounds) to the squares the program above got
-      if (y < 8 && y >= 0 && x < 8 && x >=0) {endX = x; endY = y;}
-      if (tempSquare != null){
-        startX = tempSquare.getX();
-        startY = tempSquare.getY();
-      }
     }
     // Knight
     else if (answer.substring(0, 1).equals("N")){
+      move += "N";
       if (answer.substring(1,2).equals("X")){temp++;}
       int y = tryParse(answer.substring(temp, temp + 1)) - 1;
       int x = letterToNum(answer.substring(temp - 1, temp));
@@ -441,9 +444,10 @@ class Main {
           tempSquare = Game.board.getSquare(endX, startY);
           // Only if the pawn being captured moved to the correct square the previous turn, and only when that was its first move (meaning it moved up 2, not up 1 twice), and it is the correct type of pawn (other players color)
           if (tempPiece != null && tempPiece.getMoveCount() == 1 && moveList.get(moveList.size() - 1).equalsIgnoreCase(numToLetter(endX) + (endY + temp)) && ((Game.players[i].isWhiteSide() && tempPiece.toString().equals("Black Pawn")) || (!Game.players[i].isWhiteSide() && tempPiece.toString().equals("White Pawn")))){
+            Square tempSquare1 = Game.board.getSquare(endX, endY + temp);
             Square tempSquare2 = Game.board.getSquare(startX, startY);
             if (tempSquare2 != null && tempSquare2.getPiece() != null && Game.board.testSquares(startX, startY, endX, endY, tempSquare2.getPiece()))
-              tempSquare2.setPiece(null);
+              tempSquare1.setPiece(null); //wrong square - fix
             return Game.playerMove(player, startX, startY, endX, endY);
           }
           System.out.println("Invalid move");

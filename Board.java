@@ -33,7 +33,12 @@ public class Board {
   public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
   public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
   public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
-  String temp;
+  // used colors
+  String color1 = ANSI_WHITE;
+  String color2 = ANSI_BLACK;
+  String back1 = ANSI_GREEN_BACKGROUND;
+  String back2 = ANSI_WHITE_BACKGROUND;
+  String background;
   
 	Square[][] boxes = new Square[8][8];
 
@@ -106,80 +111,80 @@ public class Board {
         // Sets background color
         if ((x + y) % 2 == 0)
         {
-          temp = ANSI_GREEN_BACKGROUND;
+          background = back1;
         }
         else 
         {
-          temp = ANSI_WHITE_BACKGROUND;
+          background = back2;
         }
         if (boxes[x][y].getPiece() == null) 
         {
-          System.out.print(temp + "__" + ANSI_RESET);
+          System.out.print(background + "__" + ANSI_RESET);
         }
         else if (boxes[x][y].getPiece() instanceof Knight) 
         {
           if (boxes[x][y].getPiece().isWhite())
           {
-            System.out.print(temp + WHITE_KNIGHT + " " + ANSI_RESET);
+            System.out.print(background + color1 + WHITE_KNIGHT + " " + ANSI_RESET);
           }
           else 
           {
-            System.out.print(temp + ANSI_BLACK + BLACK_KNIGHT + " " + ANSI_RESET);
+            System.out.print(background + color2 + BLACK_KNIGHT + " " + ANSI_RESET);
           }
         }
         else if (boxes[x][y].getPiece() instanceof King)
         {
           if (boxes[x][y].getPiece().isWhite())
           {
-            System.out.print(temp + WHITE_KING + " " + ANSI_RESET);
+            System.out.print(background + color1 + WHITE_KING + " " + ANSI_RESET);
           }
           else 
           {
-            System.out.print(temp + ANSI_TEST + BLACK_KING + " " + ANSI_RESET);
+            System.out.print(background + color2 + BLACK_KING + " " + ANSI_RESET);
           }
         }
         else if (boxes[x][y].getPiece() instanceof Queen)
         {
           if (boxes[x][y].getPiece().isWhite())
           {
-            System.out.print(temp + WHITE_QUEEN + " " + ANSI_RESET);
+            System.out.print(background + color1 + WHITE_QUEEN + " " + ANSI_RESET);
           }
           else 
           {
-            System.out.print(temp + ANSI_BLACK + BLACK_QUEEN + " " + ANSI_RESET);
+            System.out.print(background + color2 + BLACK_QUEEN + " " + ANSI_RESET);
           }
         }
         else if (boxes[x][y].getPiece() instanceof Rook)
         {
           if (boxes[x][y].getPiece().isWhite())
           {
-            System.out.print(temp + WHITE_ROOK + " " + ANSI_RESET);
+            System.out.print(background + color1 + WHITE_ROOK + " " + ANSI_RESET);
           }
           else 
           {
-            System.out.print(temp + ANSI_BLACK + BLACK_ROOK + " " + ANSI_RESET);
+            System.out.print(background + color2 + BLACK_ROOK + " " + ANSI_RESET);
           }
         }
         else if (boxes[x][y].getPiece() instanceof Bishop)
         {
           if (boxes[x][y].getPiece().isWhite())
           {
-            System.out.print(temp + WHITE_BISHOP + " " + ANSI_RESET);
+            System.out.print(background + color1 + WHITE_BISHOP + " " + ANSI_RESET);
           }
           else 
           {
-            System.out.print(temp + ANSI_BLACK + BLACK_BISHOP + " " + ANSI_RESET);
+            System.out.print(background + color2 + BLACK_BISHOP + " " + ANSI_RESET);
           }
         }
         else
         {
           if (boxes[x][y].getPiece().isWhite())
           {
-            System.out.print(temp + WHITE_PAWN + " " + ANSI_RESET);
+            System.out.print(background + color1 + WHITE_PAWN + " " + ANSI_RESET);
           }
           else 
           {
-            System.out.print(temp + ANSI_BLACK + BLACK_PAWN + " " + ANSI_RESET);
+            System.out.print(background + color2 + BLACK_PAWN + " " + ANSI_RESET);
           }
         }
 			}
