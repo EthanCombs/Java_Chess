@@ -12,12 +12,13 @@ class Main {
   static ArrayList<String> moveList = new ArrayList<String>();
   static int startX = 0; static int startY = 0; static int endX = 0; static int endY = 0;
   static int temp;
+  static int temp2;
   static boolean promotion = false;
   static int promotionX;
 
   public static void main(String[] args) {
     Game.initialize(player1, player2);
-    System.out.println("Answer format - King : \"K\", Queen : \"Q\", Bishop : \"B\", Knight : \"N\", Rook : \"R\", Pawn : \"\", squares are a1 - h8.\nFormat is piece, square of piece if there are multiple of that piece, x and other piece for captures, square to move to. Castling is o-o or o-o-o, for short and long castles. \nEx. d4 - moves pawn on d2/d3 to d4, Qe1h1 - moves queen on e1 to h1, qe1xd1 - queen on e1 captures on d1, rd8xd4 - the rook on d8 captures on d4\nType \"Moves\" to show previous moves.\nType \"Board\" to print the board.");
+    System.out.println("Answer format - King : \"K\", Queen : \"Q\", Bishop : \"B\", Knight : \"N\", Rook : \"R\", Pawn : \"\", squares are a1 - h8.\nFormat is short algebraic notation - www.chess.com/terms/chess-notation \nType \"Moves\" to show previous moves.\nType \"Board\" to print the board.");
     while(!Game.isEnd()) {
       if (Game.currentTurn.equals(player1)){
         while(!didMove){
@@ -36,7 +37,7 @@ class Main {
           temp = 2;
           move = "";
           System.out.println("Player 1 - Enter Move: ");
-          answer = scan.nextLine().toUpperCase();
+          answer = scan.nextLine();
           answer += "00000000"; //Ensures that the string is long enough to be tested everywhere with no "java.lang.StringIndexOutOfBoundsException"
           // Converts answer to move assuming they entered their move in the correct format
           
@@ -64,7 +65,7 @@ class Main {
           temp = 2;
           move = "";
           System.out.println("Player 2 - Enter Move: ");
-          answer = scan.nextLine().toUpperCase();
+          answer = scan.nextLine();
           answer += "00000000"; //Ensures that the string is long enough to be tested everywhere with no "java.lang.StringIndexOutOfBoundsException"
           
           // Converts answer to move assuming they entered their move in the correct format
@@ -77,13 +78,13 @@ class Main {
   }
   public static boolean answerToMove(String answer, Player player, int i){
     promotion = false;
-    if (answer.equals("MOVES00000000")) {
+    if (answer.equalsIgnoreCase("MOVES00000000")) {
       printMoves();
       return false;
     }
-    else if (answer.equals("BOARD00000000")) {Game.board.printBoard(); return false;}
+    else if (answer.equalsIgnoreCase("BOARD00000000")) {Game.board.printBoard(); return false;}
     // Castling Short (King-side)
-    else if (answer.equals("O-O00000000")){
+    else if (answer.equalsIgnoreCase("0-000000000")){
       // White
       if (Game.players[i].isWhiteSide()) {
         Square e1 = Game.board.getSquare(4,0);
@@ -142,7 +143,7 @@ class Main {
       }
     }
     // Castling Long (Queen-side)
-    else if (answer.equals("O-O-O00000000")){
+    else if (answer.equalsIgnoreCase("0-0-000000000")){
       // White
       if (Game.players[i].isWhiteSide()) {
         Square e1 = Game.board.getSquare(4,0);
@@ -203,15 +204,15 @@ class Main {
       }
     }
     // King
-    else if (answer.substring(0, 1).equals("K")){
+    else if (answer.substring(0, 1).equalsIgnoreCase("K")){
       if (Game.players[i].isWhiteSide()) {
         tempSquare = Game.board.getSquare("White King");
       }
       else
         tempSquare = Game.board.getSquare("Black King");
-      if (answer.substring(1,2).equals("X")){temp++;}
+      if (answer.substring(1,2).equalsIgnoreCase("X")){temp++;}
       int y = tryParse(answer.substring(temp, temp + 1)) - 1;
-      int x = letterToNum(answer.substring(temp - 1, temp));
+      int x = letterToNum(answer.substring(temp - 1, temp).toUpperCase());
       if (y < 8 && y >= 0 && x < 8 && x >=0) {endX = x; endY = y;}
       if (tempSquare != null){
         startX = tempSquare.getX();
@@ -220,11 +221,11 @@ class Main {
       move = "K" + numToLetter(x).toLowerCase() + y;
     } 
     // Queen
-    else if (answer.substring(0, 1).equals("Q")){
+    else if (answer.substring(0, 1).equalsIgnoreCase("Q")){
       move += "Q";
-      if (answer.substring(1,2).equals("X")){temp++;}
+      if (answer.substring(1,2).equalsIgnoreCase("X")){temp++;}
       int y = tryParse(answer.substring(temp, temp + 1)) - 1;
-      int x = letterToNum(answer.substring(temp - 1, temp));
+      int x = letterToNum(answer.substring(temp - 1, temp).toUpperCase());
       // Gets Square of piece
       if (Game.players[i].isWhiteSide()){
         tempSquare = Game.board.getSquare("White Queen");
@@ -247,9 +248,9 @@ class Main {
         }
       }
       // Gets Square to move to
-      if (answer.substring(3,4).equals("X")){temp++;}
+      if (answer.substring(3,4).equalsIgnoreCase("X")){temp++;}
       y = tryParse(answer.substring(temp, temp + 1)) - 1;
-      x = letterToNum(answer.substring(temp - 1, temp));
+      x = letterToNum(answer.substring(temp - 1, temp).toUpperCase());
       // Sets start and end (only if it is in bounds) to the squares the program above got
       if (y < 8 && y >= 0 && x < 8 && x >=0) {endX = x; endY = y;}
       if (tempSquare != null){
@@ -270,11 +271,11 @@ class Main {
       move += numToLetter(endX).toLowerCase() + (endY + 1);
     } 
     // Rook
-    else if (answer.substring(0, 1).equals("R")){
+    else if (answer.substring(0, 1).equalsIgnoreCase("R")){
       move += "R";
-      if (answer.substring(1,2).equals("X")){temp++;}
+      if (answer.substring(1,2).equalsIgnoreCase("X")){temp++;}
       int y = tryParse(answer.substring(temp, temp + 1)) - 1;
-      int x = letterToNum(answer.substring(temp - 1, temp));
+      int x = letterToNum(answer.substring(temp - 1, temp).toUpperCase());
       // Gets Square of piece
       if (Game.players[i].isWhiteSide()){
         tempSquare = Game.board.getSquare("White Rook");
@@ -297,9 +298,9 @@ class Main {
         }
       }
       // Gets Square to move to
-      if (answer.substring(3,4).equals("X")){temp++;}
+      if (answer.substring(3,4).equalsIgnoreCase("X")){temp++;}
       y = tryParse(answer.substring(temp, temp + 1)) - 1;
-      x = letterToNum(answer.substring(temp - 1, temp));
+      x = letterToNum(answer.substring(temp - 1, temp).toUpperCase());
       // Sets start and end (only if it is in bounds) to the squares the program above got
       if (y < 8 && y >= 0 && x < 8 && x >=0) {endX = x; endY = y;}
       if (tempSquare != null){
@@ -320,11 +321,11 @@ class Main {
       move += numToLetter(endX).toLowerCase() + (endY + 1);
     } 
     // Bishop
-    else if (answer.substring(0, 1).equals("B") && (answer.substring(1, 2).equals("X") || tryLetterToNum(answer.substring(1, 2)) != -1)){
+    else if (answer.substring(0, 1).equals("B")){
       move += "B";
-      if (answer.substring(1,2).equals("X")){temp++;}
+      if (answer.substring(1,2).equalsIgnoreCase("X")){temp++;}
       int y = tryParse(answer.substring(temp, temp + 1)) - 1;
-      int x = letterToNum(answer.substring(temp - 1, temp));
+      int x = letterToNum(answer.substring(temp - 1, temp).toUpperCase());
       // Gets Square of piece
       if (Game.players[i].isWhiteSide()){
         tempSquare = Game.board.getSquare("White Bishop");
@@ -347,9 +348,9 @@ class Main {
         }
       }
       // Gets Square to move to
-      if (answer.substring(3,4).equals("X")){temp++;}
+      if (answer.substring(3,4).equalsIgnoreCase("X")){temp++;}
       y = tryParse(answer.substring(temp, temp + 1)) - 1;
-      x = letterToNum(answer.substring(temp - 1, temp));
+      x = letterToNum(answer.substring(temp - 1, temp).toUpperCase());
       // Sets start and end (only if it is in bounds) to the squares the program above got
       if (y < 8 && y >= 0 && x < 8 && x >=0) {endX = x; endY = y;}
       if (tempSquare != null){
@@ -370,11 +371,11 @@ class Main {
       move += numToLetter(endX).toLowerCase() + (endY + 1);
     }
     // Knight
-    else if (answer.substring(0, 1).equals("N")){
+    else if (answer.substring(0, 1).equalsIgnoreCase("N")){
       move += "N";
-      if (answer.substring(1,2).equals("X")){temp++;}
+      if (answer.substring(1,2).equalsIgnoreCase("X")){temp++;}
       int y = tryParse(answer.substring(temp, temp + 1)) - 1;
-      int x = letterToNum(answer.substring(temp - 1, temp));
+      int x = letterToNum(answer.substring(temp - 1, temp).toUpperCase());
       // Gets Square of piece
       if (Game.players[i].isWhiteSide()){
         tempSquare = Game.board.getSquare("White Knight");
@@ -397,9 +398,9 @@ class Main {
         }
       }
       // Gets Square to move to
-      if (answer.substring(3,4).equals("X")){temp++;}
+      if (answer.substring(3,4).equalsIgnoreCase("X")){temp++;}
       y = tryParse(answer.substring(temp, temp + 1)) - 1;
-      x = letterToNum(answer.substring(temp - 1, temp));
+      x = letterToNum(answer.substring(temp - 1, temp).toUpperCase());
       // Sets start and end (only if it is in bounds) to the squares the program above got
       if (y < 8 && y >= 0 && x < 8 && x >=0) {endX = x; endY = y;}
       if (tempSquare != null){
@@ -422,17 +423,19 @@ class Main {
     // Pawn
     else{
       // Pawn captures
-      if (answer.substring(1,2).equals("X")){
-        endX = letterToNum(answer.substring(2,3));
+      if (answer.substring(1,2).equalsIgnoreCase("X")){
+        endX = letterToNum(answer.substring(2,3).toUpperCase());
         endY = tryParse(answer.substring(3,4)) - 1;
-        startX = letterToNum(answer.substring(0,1));
+        startX = letterToNum(answer.substring(0,1).toUpperCase());
         if (Game.players[i].isWhiteSide()){
           startY = endY - 1;
           temp = 0;
+          temp2 = -1;
         }
         else{
           startY = endY + 1;
           temp = 2;
+          temp2 = 1;
         }
         // Sets move to correct notation, and gets correct start and end coords
         move += answer.substring(0,1).toLowerCase() + "x" + answer.substring(2,3).toLowerCase() + (endY + 1);
@@ -444,7 +447,7 @@ class Main {
           tempSquare = Game.board.getSquare(endX, startY);
           // Only if the pawn being captured moved to the correct square the previous turn, and only when that was its first move (meaning it moved up 2, not up 1 twice), and it is the correct type of pawn (other players color)
           if (tempPiece != null && tempPiece.getMoveCount() == 1 && moveList.get(moveList.size() - 1).equalsIgnoreCase(numToLetter(endX) + (endY + temp)) && ((Game.players[i].isWhiteSide() && tempPiece.toString().equals("Black Pawn")) || (!Game.players[i].isWhiteSide() && tempPiece.toString().equals("White Pawn")))){
-            Square tempSquare1 = Game.board.getSquare(endX, endY + temp);
+            Square tempSquare1 = Game.board.getSquare(endX, endY + temp2);
             Square tempSquare2 = Game.board.getSquare(startX, startY);
             if (tempSquare2 != null && tempSquare2.getPiece() != null && Game.board.testSquares(startX, startY, endX, endY, tempSquare2.getPiece()))
               tempSquare1.setPiece(null); //wrong square - fix
@@ -456,7 +459,7 @@ class Main {
         return Game.playerMove(player, startX, startY, endX, endY);
       }
       int y = tryParse(answer.substring(1,2)) - 1;
-      int x = letterToNum(answer.substring(0,1));
+      int x = letterToNum(answer.substring(0,1).toUpperCase());
       // White pawn move
       if (Game.players[i].isWhiteSide()){
         // Finds the piece to move by looking at square before, then 2 squares before
