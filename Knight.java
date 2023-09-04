@@ -9,9 +9,6 @@ public class Knight extends Piece {
 	{
     int x = Math.abs(this.getX() - endX);
 		int y = Math.abs(this.getY() - endY);
-    // Prevents / 0 error
-    if (y == 0)
-      return false;
     // Can only move 1 in x or y, and 2 in the other
 		return x * y == 2;
   }

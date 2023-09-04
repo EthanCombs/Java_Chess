@@ -18,8 +18,9 @@ class Main {
 
   public static void main(String[] args) {
     Game.initialize(player1, player2);
-    System.out.println("Answer format - King : \"K\", Queen : \"Q\", Bishop : \"B\", Knight : \"N\", Rook : \"R\", Pawn : \"\", squares are a1 - h8.\nFormat is short algebraic notation - www.chess.com/terms/chess-notation \nType \"Moves\" to show previous moves.\nType \"Board\" to print the board.");
+    System.out.println("Answer format - King : \"K\", Queen : \"Q\", Bishop : \"B\", Knight : \"N\", Rook : \"R\", Pawn : \"\", squares are a1 - h8.\nFormat is short algebraic notation - www.chess.com/terms/chess-notation \nType \"Moves\" to show previous moves.");
     while(!Game.isEnd()) {
+      Game.board.printBoard();
       if (Game.currentTurn.equals(player1)){
         while(!didMove){
           if (promotion)
@@ -82,7 +83,6 @@ class Main {
       printMoves();
       return false;
     }
-    else if (answer.equalsIgnoreCase("BOARD00000000")) {Game.board.printBoard(); return false;}
     // Castling Short (King-side)
     else if (answer.equalsIgnoreCase("0-000000000")){
       // White
@@ -450,11 +450,17 @@ class Main {
             Square tempSquare1 = Game.board.getSquare(endX, endY + temp2);
             Square tempSquare2 = Game.board.getSquare(startX, startY);
             if (tempSquare2 != null && tempSquare2.getPiece() != null && Game.board.testSquares(startX, startY, endX, endY, tempSquare2.getPiece()))
-              tempSquare1.setPiece(null); //wrong square - fix
+              tempSquare1.setPiece(null);
             return Game.playerMove(player, startX, startY, endX, endY);
           }
           System.out.println("Invalid move");
           return false;
+        }
+        // Tests if pawn is on last square for promotion;
+        if (endY == 7 && Game.players[i].isWhiteSide() || endY == 0 && !Game.players[i].isWhiteSide()) 
+        {
+          promotion = true; 
+          promotionX = endX;
         }
         return Game.playerMove(player, startX, startY, endX, endY);
       }
@@ -482,8 +488,12 @@ class Main {
       }
       // If the end square they give is in bounds, sets the x and y to endX and endY
       if (y < 8 && y >= 0 && x < 8 && x >=0) {endX = x; endY = y;}
-      // Tests if pawn is on last square and ready for promotion;
-      if (endY == 7 && Game.players[i].isWhiteSide() || endY == 0 && !Game.players[i].isWhiteSide()) {promotion = true; promotionX = endX;}
+      // Tests if pawn is on last square for promotion;
+      if (endY == 7 && Game.players[i].isWhiteSide() || endY == 0 && !Game.players[i].isWhiteSide()) 
+      {
+        promotion = true; 
+        promotionX = endX;
+      }
       if (tempSquare != null)
       {
         startX = tempSquare.getX();
